@@ -7,7 +7,7 @@ export const Todo = ({ todo, onRemove, onOpen }) => {
 
   return (
     <TouchableOpacity
-      delayLongPress={1700}
+      //delayLongPress={1000}
       onPress={() => onOpen(todo.id)}
       // onLongPress={longpressHandler}
       onLongPress={onRemove.bind(null, todo.id)}

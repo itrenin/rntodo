@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { StyleSheet, Text, View, FlatList } from 'react-native'
+import { StyleSheet, Text, View, FlatList, Alert } from 'react-native'
 import { computeWindowedRenderLimits } from 'react-native/Libraries/Lists/VirtualizeUtils'
 import { Navbar } from './src/components/Navbar'
 import { MainScreen } from './src/screens/MainScreen'
@@ -28,7 +28,22 @@ export default function App() {
     ])
   }
   const removeTodo = (id) => {
-    setTodos((prev) => prev.filter((todo) => todo.id !== id))
+    const todo = todos.find((t) => t.id === id)
+    Alert.alert('Удаление элемента', `Удаляем "${todo.title}"?`, [
+      {
+        text: 'Нет',
+        style: 'cancel',
+      },
+      {
+        text: 'Удаляем',
+        style: 'destructive',
+        
+        onPress: () => {
+          setTodoId(null)
+          setTodos((prev) => prev.filter((todo) => todo.id !== id))
+        },
+      },
+    ])
   }
   let content = (
     <MainScreen
@@ -44,6 +59,7 @@ export default function App() {
     const selectedTodo = todos.find((todo) => todo.id === todoId)
     content = (
       <TodoScreen
+        onRemove={removeTodo}
         goMain={() => {
           setTodoId(null)
         }}

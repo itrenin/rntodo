@@ -1,5 +1,6 @@
 import { View, StyleSheet, TextInput, Button, Alert } from 'react-native'
 import { useState } from 'react'
+import { THEME } from '../theme'
 
 export const AddTodo = ({ onSubmit }) => {
   const [value, setValue] = useState('')
@@ -12,9 +13,9 @@ export const AddTodo = ({ onSubmit }) => {
       Alert.alert('Добавить надо что-то, а не пустоту :(')
     }
   }
-//   const keypressHandler = () => {
-      
-//   }
+  //   const keypressHandler = () => {
+
+  //   }
 
   return (
     <View style={styles.block}>
@@ -41,7 +42,7 @@ const styles = StyleSheet.create({
     width: '80%',
     borderStyle: 'solid',
     borderBottomWidth: 2,
-    borderBottomColor: '#3949ab',
+    borderBottomColor: THEME.MAIN_COLOR,
     padding: 10,
   },
   button: {},
