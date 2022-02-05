@@ -12,6 +12,7 @@ export const Navbar = (props) => {
 const styles = StyleSheet.create({
     navbar:{
         height: '10%',
+        minHeight: 70,
         alignItems: 'center',
         justifyContent: 'flex-end',
         backgroundColor: '#3949ab',
