@@ -2,17 +2,29 @@ import { StyleSheet, View, Text, Button, Modal } from 'react-native'
 import { useState } from 'react'
 import { THEME } from '../theme'
 import { AppCard } from '../components/ui/AppCard'
+import { EditModal } from '../components/EditModal'
 
-export const TodoScreen = ({ goMain, todo, onRemove }) => {
+export const TodoScreen = ({ goMain, todo, onRemove, onSave }) => {
+  const [modal, setModal] = useState(false)
 
-  const[modal, setModal] = useState(false)
+  const saveHandler = (title) => {
+    onSave(todo.id, title)
+    setModal(false)
+    // goMain() сразу на главную
+  }
 
   return (
     <View>
+      <EditModal
+        value={todo.title}
+        visible={modal}
+        onCancel={() => setModal(false)}
+        onSave={saveHandler}
+      />
       <AppCard style={styles.card}>
         <Text style={styles.title}>{todo.title}</Text>
         <View style={styles.cardButon}>
-          <Button title="Edit" />
+          <Button title="Edit" onPress={() => setModal(true)} />
         </View>
       </AppCard>
       <View style={styles.buttons}>
@@ -38,8 +50,8 @@ const styles = StyleSheet.create({
   button: {
     width: '45%',
   },
-  cardButon:{
-    maxWidth: '20%'
+  cardButon: {
+    maxWidth: '20%',
   },
   title: {
     maxWidth: '80%',
@@ -49,8 +61,8 @@ const styles = StyleSheet.create({
   edit: {
     maxHeight: 20,
   },
-  card:{
+  card: {
     marginBottom: 20,
     padding: 15,
-  }
+  },
 })

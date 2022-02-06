@@ -15,9 +15,12 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     elevation: 8,
     //padding: 20,
-    shadowColor: '#000',
-    shadowRadius: 2,
-    shadowOpacity: 0.3,
+
+    // iOS settings starts
+    // shadowColor: '#000',
+    // shadowRadius: 2,
+    // shadowOpacity: 0.3,
+    // iOS settings ends
     shadowOffset: { height: 2, width: 2 },
   },
   title: {
