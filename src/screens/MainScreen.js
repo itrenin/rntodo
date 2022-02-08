@@ -1,7 +1,9 @@
-import { StyleSheet, View, FlatList, Text } from 'react-native'
+import { StyleSheet, View, FlatList, Text, Image } from 'react-native'
+
 import { AddTodo } from '../components/AddTodo'
 import { Todo } from '../components/Todo'
-import { THEME } from '../theme'
+
+
 
 export const MainScreen = ({ addTodo, todos, removeTodo, openTodo }) => {
   let content = (
@@ -13,8 +15,21 @@ export const MainScreen = ({ addTodo, todos, removeTodo, openTodo }) => {
       )}
     />
   )
-  if (todos.length === 0){
-    content = <View></View>
+  if (todos.length === 0) {
+    content = (
+      <View style={styles.imgwrap}>
+        <Image
+          style={styles.img}
+          source={require('../../assets/no-items.png')}
+        />
+        {/* <Image
+          style={styles.img}
+          source={{
+            uri: 'https://www.pngall.com/wp-content/uploads/5/Albert-Einstein.png',
+          }}
+        /> */}
+      </View>
+    )
   }
 
   return (
@@ -25,8 +40,15 @@ export const MainScreen = ({ addTodo, todos, removeTodo, openTodo }) => {
   )
 }
 const styles = StyleSheet.create({
-  voidText: {
-    color: THEME.GREY_COLOR,
-    fontSize: 50,
+  imgwrap: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: 20,
+    height: 300,
+  },
+  img: {
+    width: '100%',
+    height: '100%',
+    resizeMode: 'contain',
   },
 })
