@@ -1,5 +1,6 @@
 import { useState } from 'react'
-import AppLoading  from 'expo-app-loading'
+// import { Asset } from 'expo-asset'
+import AppLoading from 'expo-app-loading'
 // import { AppLoading } from 'expo'
 import { StyleSheet, View, Alert } from 'react-native'
 import * as Font from 'expo-font'
@@ -7,6 +8,7 @@ import * as Font from 'expo-font'
 import { Navbar } from './src/components/Navbar'
 import { MainScreen } from './src/screens/MainScreen'
 import { TodoScreen } from './src/screens/TodoScreen'
+import { THEME } from './src/theme'
 
 async function loadApp() {
   await Font.loadAsync({
@@ -29,7 +31,6 @@ export default function App() {
       />
     )
   }
-
 
   const addTodo = (title) => {
     //   const newTodo = {
@@ -115,7 +116,7 @@ const styles = StyleSheet.create({
   container: {
     height: '90%',
     overflow: 'scroll',
-    paddingHorizontal: 30,
+    paddingHorizontal: THEME.PADDING_HORIZONTAL,
     paddingVertical: 20,
   },
   flatlist: {},

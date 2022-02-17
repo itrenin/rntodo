@@ -1,6 +1,7 @@
-import { View, StyleSheet, TextInput, Button, Alert } from 'react-native'
+import { View, StyleSheet, TextInput, Button, Alert, Keyboard } from 'react-native'
 import { useState } from 'react'
 import { THEME } from '../theme'
+import { AntDesign } from '@expo/vector-icons'
 
 export const AddTodo = ({ onSubmit }) => {
   const [value, setValue] = useState('')
@@ -9,6 +10,7 @@ export const AddTodo = ({ onSubmit }) => {
     if (value.trim()) {
       onSubmit(value)
       setValue('')
+      Keyboard.dismiss()
     } else {
       Alert.alert('Добавить надо что-то, а не пустоту :(')
     }
@@ -25,7 +27,8 @@ export const AddTodo = ({ onSubmit }) => {
         value={value}
         placeholder="Что делаем?"
       />
-      <Button title="Add" onPress={pressHandler} />
+      {/* <Button title="Add" onPress={pressHandler} /> */}
+      <AntDesign.Button onPress={pressHandler} name={'pluscircleo'}>Добавить</AntDesign.Button>
     </View>
   )
 }
@@ -39,7 +42,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   input: {
-    width: '80%',
+    width: '60%',
     borderStyle: 'solid',
     borderBottomWidth: 2,
     borderBottomColor: THEME.MAIN_COLOR,
