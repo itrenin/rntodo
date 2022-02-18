@@ -1,26 +1,45 @@
 import { StyleSheet, View, FlatList, Image, Dimensions } from 'react-native'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useContext, useCallback } from 'react'
 import { AddTodo } from '../components/AddTodo'
 import { Todo } from '../components/Todo'
 import { THEME } from '../theme'
+import { TodoContext } from '../context/todo/todoContext'
+import { ScreenContext } from '../context/screen/screenContext'
 
-export const MainScreen = ({ addTodo, todos, removeTodo, openTodo }) => {
+export const MainScreen = () => {
+  const { addTodo, todos, removeTodo, fetchTodos, loading, error } =
+    useContext(TodoContext)
+  const { changeScreen } = useContext(ScreenContext)
   const [deviceWidth, setDeviceWidth] = useState(
     Dimensions.get('window').width - THEME.PADDING_HORIZONTAL * 2
   )
- useEffect(() => {
-   const subscribtion = Dimensions.addEventListener('change', () => setDeviceWidth(Dimensions.get('window').width - THEME.PADDING_HORIZONTAL * 2))
-  return ()=>{
-    subscribtion?.remove()
-  }
- })
+  const loadTodos = useCallback(async () => await fetchTodos(), [fetchTodos])
+
+  useEffect(() => {
+    loadTodos()
+  }, [])
+
+  // ставим слушатель события
+  // ловим изменение положения экрана по событию change и пихаем
+  // в стейт новое значение ширины для перерисовки компонента
+  useEffect(() => {
+    const subscribtion = Dimensions.addEventListener('change', () =>
+      setDeviceWidth(
+        Dimensions.get('window').width - THEME.PADDING_HORIZONTAL * 2
+      )
+    )
+    return () => {
+      // удаляем слушатель события
+      subscribtion?.remove()
+    }
+  })
   let content = (
     <View style={{ width: deviceWidth }}>
       <FlatList
         keyExtractor={(item) => item.id}
         data={todos}
         renderItem={({ item }) => (
-          <Todo todo={item} onRemove={removeTodo} onOpen={openTodo} />
+          <Todo todo={item} onRemove={removeTodo} onOpen={changeScreen} />
         )}
       />
     </View>

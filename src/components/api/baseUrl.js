@@ -1,0 +1,1 @@
+export const baseURL = 'https://rn-todo-app-197e1-default-rtdb.firebaseio.com/'
