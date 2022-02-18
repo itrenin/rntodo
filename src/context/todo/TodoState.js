@@ -48,25 +48,52 @@ export const TodoState = ({ children }) => {
         text: 'Удаляем',
         style: 'destructive',
 
-        onPress: () => {
+        onPress: async () => {
           changeScreen(null)
+          await fetch(`${baseURL}todos/${id}.json`, {
+            method: 'DELETE',
+            headers: { 'Content-Type': 'application/json' },
+          })
           dispatch({ type: REMOVE_TODO, id })
         },
       },
     ])
   }
 
-  const updateTodo = (id, title) => dispatch({ type: UPDATE_TODO, id, title })
+  const updateTodo = async (id, title) => {
+    clearError()
+    try {
+      await fetch(`${baseURL}todos/${id}.json`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ title }),
+      })
+      dispatch({ type: UPDATE_TODO, id, title })
+    } catch (e) {
+      showError('Что-то пошло не так...')
+      console.log(e)
+    } finally {
+    }
+  }
 
   const fetchTodos = async () => {
-    const response = await fetch(baseURL + 'todos.json', {
-      method: 'GET',
-      headers: { 'Content-Type': 'application/json' },
-    })
-    const data = await response.json()
-    const todos = Object.keys(data).map((key) => ({ ...data[key], id: key }))
-    dispatch({ type: FETCH_TODOS, todos })
-    console.log('Fetch Data ', data)
+    showLoader()
+    clearError()
+    try {
+      const response = await fetch(baseURL + 'todos.json', {
+        method: 'GET',
+        headers: { 'Content-Type': 'application/json' },
+      })
+      const data = await response.json()
+      const todos = Object.keys(data).map((key) => ({ ...data[key], id: key }))
+      dispatch({ type: FETCH_TODOS, todos })
+      //setTimeout(()=> dispatch({ type: FETCH_TODOS, todos }), 5000)} catch (e) {
+    } catch (e) {
+      showError('Что-то пошло не так...')
+      console.log(e)
+    } finally {
+      hideLoader()
+    }
   }
 
   const showLoader = () => dispatch({ type: SHOW_LOADER })
