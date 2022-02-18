@@ -15,6 +15,7 @@ import {
 
 import { TodoContext } from './todoContext'
 import { todoReducer } from './todoReduser'
+import { Http } from '../../components/http'
 
 export const TodoState = ({ children }) => {
   const initialState = {
@@ -27,14 +28,14 @@ export const TodoState = ({ children }) => {
   const [state, dispatch] = useReducer(todoReducer, initialState)
 
   const addTodo = async (title) => {
-    const response = await fetch(baseURL + 'todos.json', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ title }),
-    })
-    const data = await response.json()
-    console.log('Data: ', data)
-    dispatch({ type: ADD_TODO, title, id: data.name })
+    clearError()
+    try {
+      const data = await Http.post(baseURL + 'todos.json', { title })
+      dispatch({ type: ADD_TODO, title, id: data.name })
+    } catch (e) {
+      showError('Что-то пошло не так при загрузке ToDo...')
+      console.error(e)
+    }
   }
 
   const removeTodo = (id) => {
@@ -50,10 +51,7 @@ export const TodoState = ({ children }) => {
 
         onPress: async () => {
           changeScreen(null)
-          await fetch(`${baseURL}todos/${id}.json`, {
-            method: 'DELETE',
-            headers: { 'Content-Type': 'application/json' },
-          })
+          await Http.delete(`${baseURL}todos/${id}.json`)
           dispatch({ type: REMOVE_TODO, id })
         },
       },
@@ -63,14 +61,10 @@ export const TodoState = ({ children }) => {
   const updateTodo = async (id, title) => {
     clearError()
     try {
-      await fetch(`${baseURL}todos/${id}.json`, {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ title }),
-      })
+      await Http.patch(`${baseURL}todos/${id}.json`, title)
       dispatch({ type: UPDATE_TODO, id, title })
     } catch (e) {
-      showError('Что-то пошло не так...')
+      showError('Что-то пошло не так в обновлении...')
       console.log(e)
     } finally {
     }
@@ -80,16 +74,15 @@ export const TodoState = ({ children }) => {
     showLoader()
     clearError()
     try {
-      const response = await fetch(baseURL + 'todos.json', {
-        method: 'GET',
-        headers: { 'Content-Type': 'application/json' },
-      })
-      const data = await response.json()
-      const todos = Object.keys(data).map((key) => ({ ...data[key], id: key }))
+      const data = await Http.get(baseURL + 'todos.json')
+      let todos
+      !data
+        ? (todos = [])
+        : (todos = Object.keys(data).map((key) => ({ ...data[key], id: key })))
       dispatch({ type: FETCH_TODOS, todos })
       //setTimeout(()=> dispatch({ type: FETCH_TODOS, todos }), 5000)} catch (e) {
     } catch (e) {
-      showError('Что-то пошло не так...')
+      showError('Что-то пошло не так...!')
       console.log(e)
     } finally {
       hideLoader()
